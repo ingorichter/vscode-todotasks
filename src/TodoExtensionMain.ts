@@ -23,6 +23,7 @@ export function activate(context: ExtensionContext): any {
     context.subscriptions.push(todoCommands.registerNewTaskCommand());
     context.subscriptions.push(todoCommands.registerCompleteTaskCommand());
     context.subscriptions.push(todoCommands.registerCancelTaskCommand());
+    context.subscriptions.push(todoCommands.registerArchiveTasksCommand());
     context.subscriptions.push(workspace.onDidChangeTextDocument((e: TextDocumentChangeEvent) => {
         _decorateEditor(true);
     }));

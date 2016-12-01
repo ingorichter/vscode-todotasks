@@ -2,17 +2,18 @@
 
 import {CompletionItem} from 'vscode';
 import {TodoDocument} from './TodoDocument';
+import {Symbol, Tag, Action} from './TodoConstants';
+import {toTag} from './TodoUtil';
 
 export default class TagsProvider {
-
-    private static TAGS: string[] = [TodoDocument.TAG_CRITICAL,
-                                        TodoDocument.TAG_HIGH,
-                                        TodoDocument.TAG_LOW,
-                                        TodoDocument.TAG_TODAY];
+    private static TAGS: string[] = [Tag.TAG_CRITICAL,
+                                        Tag.TAG_HIGH,
+                                        Tag.TAG_LOW,
+                                        Tag.TAG_TODAY];
 
     public static getTags(prefix?: string): Promise<CompletionItem[]> {
-        prefix = prefix && prefix !== TodoDocument.SYMBOL_TAG
-            ? prefix.startsWith(TodoDocument.SYMBOL_TAG) ? prefix.substring(1) : prefix.toLocaleLowerCase()
+        prefix = prefix && prefix !== Symbol.SYMBOL_TAG
+            ? prefix.startsWith(Symbol.SYMBOL_TAG) ? prefix.substring(1) : prefix.toLocaleLowerCase()
             : "";
         let filtered = TagsProvider.TAGS.filter((tag: string, index: number, collection: String[]): boolean => {
             return !prefix || tag.toLocaleLowerCase().indexOf(prefix) !== -1
@@ -22,7 +23,7 @@ export default class TagsProvider {
     }
 
     private static toCompletionItem(tag: string, index: number, collection: String[]): CompletionItem {
-        tag = TodoDocument.toTag(tag);
+        tag = toTag(tag);
         var completionItem = new CompletionItem(tag);
         completionItem.insertText = tag + " ";
         return completionItem;

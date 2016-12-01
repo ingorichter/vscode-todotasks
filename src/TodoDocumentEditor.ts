@@ -3,6 +3,10 @@
 import { commands, TextEditor, TextEditorEdit, Range, Position, TextLine, TextDocumentChangeEvent } from 'vscode';
 import {TodoDocument} from './TodoDocument';
 import TodoDocumentDecorator from './TodoDocumentDecorator';
+
+import {Symbol, Tag, Action} from './TodoConstants';
+import {toTag} from './TodoUtil';
+
 export class TodoDocumentEditor {
     constructor(private _textEditor: TextEditor, private _textEditorEdit: TextEditorEdit) {
     }
@@ -18,7 +22,7 @@ export class TodoDocumentEditor {
 
         let taskLine= this._textEditor.document.lineAt(this._textEditor.selection.active);
         let taskDescription= taskLine.text.trim();
-        this.updateTask(taskLine, taskDescription, TodoDocument.SYMBOL_NEW_TASK);
+        this.updateTask(taskLine, taskDescription, Symbol.SYMBOL_NEW_TASK);
     }
 
     public completeCurrentTask() {
@@ -31,11 +35,11 @@ export class TodoDocumentEditor {
         }
 
         if (task.isDone()) {
-            this.updateTask(task.taskLine, task.getDescription(), TodoDocument.SYMBOL_NEW_TASK);
+            this.updateTask(task.taskLine, task.getDescription(), Symbol.SYMBOL_NEW_TASK);
             return;
         }
 
-        this.updateTask(task.taskLine, task.getDescription(), TodoDocument.SYMBOL_DONE_TASK, TodoDocument.ACTION_DONE);
+        this.updateTask(task.taskLine, task.getDescription(), Symbol.SYMBOL_DONE_TASK, Action.ACTION_DONE);
     }
 
     public cancelCurrentTask() {
@@ -56,13 +60,28 @@ export class TodoDocumentEditor {
             return;
         }
 
-        this.updateTask(task.taskLine, task.getDescription(), TodoDocument.SYMBOL_CANCEL_TASK, TodoDocument.ACTION_CANCELLED);
+        this.updateTask(task.taskLine, task.getDescription(), Symbol.SYMBOL_CANCEL_TASK, Action.ACTION_CANCELLED);
+    }
+
+    public archiveDoneTasks() {
+        let todoDocument= new TodoDocument(this._textEditor.document);
+        let pos= this._textEditor.selection.active;
+        var task= todoDocument.getTask(pos);
+        
+        if (!task) {
+            return;
+        }
+        if (task.isEmpty()) {
+            return;
+        }
+
+//        this.updateTask(task.taskLine, task.getDescription(), Symbol.SYMBOL_CANCEL_TASK, Action.ACTION_CANCELLED);
     }
 
     private updateTask(taskLine: TextLine, taskDescription: string, symbol: string, tag?: string) {
         var timestamp = new Date(); 
         this._textEditorEdit.delete(new Range(new Position(taskLine.lineNumber, taskLine.firstNonWhitespaceCharacterIndex), taskLine.range.end));
-        this.insertTask(new Position(taskLine.lineNumber, taskLine.firstNonWhitespaceCharacterIndex), symbol + " " + taskDescription + (tag ? (" " + TodoDocument.toTag(tag)+' (' + timestamp.toLocaleString() + ')'): ""));
+        this.insertTask(new Position(taskLine.lineNumber, taskLine.firstNonWhitespaceCharacterIndex), symbol + " " + taskDescription + (tag ? (" " + toTag(tag)+' (' + timestamp.toLocaleString() + ')'): ""));
     }
 
     private insertTask(pos: Position, task: string) {

@@ -1,7 +1,8 @@
 'use strict';
 
 import { CodeActionProvider, CodeActionContext, TextDocument, Position, CancellationToken, Command, Range } from 'vscode';
-import { TodoDocument, Task } from './TodoDocument';
+import { TodoDocument } from './TodoDocument';
+import Task from './Task';
 
 export default class TodoCodeActionProvider implements CodeActionProvider {
     

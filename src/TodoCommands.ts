@@ -3,12 +3,14 @@
 import { commands, TextEditor, TextEditorEdit, CompletionItem, TextEdit, window} from 'vscode';
 import { TodoDocument } from './TodoDocument';
 import { TodoDocumentEditor } from './TodoDocumentEditor';
+import {Symbol, Tag, Action} from './TodoConstants';
+import {toTag} from './TodoUtil';
 
 export class TodoCommands {
-    
     public static NEW_TASK= "task.new";
     public static COMPLETE_TASK= "task.complete";
     public static CANCEL_TASK= "task.cancel";
+    public static ARCHIVE_TASKS= "task.archive";
 
     public registerNewTaskCommand() {
         return commands.registerTextEditorCommand(TodoCommands.NEW_TASK, (textEditor: TextEditor, edit: TextEditorEdit) => {
@@ -37,6 +39,14 @@ export class TodoCommands {
     private isSupportedLanguage(textEditor: TextEditor):boolean {
         return "todo" === textEditor.document.languageId;
     }
+
+    public registerArchiveTasksCommand() {
+        return commands.registerTextEditorCommand(TodoCommands.ARCHIVE_TASKS, (textEditor: TextEditor, edit: TextEditorEdit) => {
+            if (this.isSupportedLanguage(textEditor)) {
+                new TodoDocumentEditor(textEditor, edit).archiveDoneTasks();
+            }
+        });
+    }
 }
 
 interface CommandObject {
@@ -46,8 +56,8 @@ interface CommandObject {
 
 export class TodoCommandsProvider {
 
-    private static COMMANDS: CommandObject[]= [{label: TodoDocument.toTag(TodoDocument.ACTION_DONE), command: "Ctrl+Shift+d"},
-                                    {label: TodoDocument.toTag(TodoDocument.ACTION_CANCELLED), command: "Ctrl+Shift+c"}];
+    private static COMMANDS: CommandObject[]= [{label: toTag(Action.ACTION_DONE), command: "Ctrl+Shift+d"},
+                                    {label: toTag(Action.ACTION_CANCELLED), command: "Ctrl+Shift+c"}];
 
     public static getCommands(filter?: string):Promise<CompletionItem[]> {
         let filtered= TodoCommandsProvider.COMMANDS.filter((commandObject: CommandObject, index: number, collection: CommandObject[]): boolean =>{

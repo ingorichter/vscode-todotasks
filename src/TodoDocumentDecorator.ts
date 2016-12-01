@@ -1,11 +1,14 @@
 'use strict';
 
 import { window, TextEditor, Range, Position, TextLine, TextDocumentChangeEvent, TextEditorDecorationType } from 'vscode';
-import {TodoDocument, Task} from './TodoDocument';
+import {TodoDocument} from './TodoDocument';
+import Task from './Task';
+import {Symbol, Tag, Action} from './TodoConstants';
+import {toTag} from './TodoUtil';
 
 export default class TodoDocumentEditor {
 
-	private timeout:number= null;
+	private timeout= null;
 
 	constructor(private _textEditor: TextEditor) {
 	}
@@ -103,11 +106,11 @@ class DoneTasksDecorator extends LineDecorator {
 	}
 
 	private getDoneSymbolRange(doneTask: Task): Range {
-		return super.getRange(TodoDocument.SYMBOL_DONE_TASK, doneTask.taskLine);
+		return super.getRange(Symbol.SYMBOL_DONE_TASK, doneTask.taskLine);
 	}
 
 	private getDoneActionRange(doneTask: Task): Range {
-		return super.getRange(TodoDocument.toTag(TodoDocument.ACTION_DONE), doneTask.taskLine);
+		return super.getRange(toTag(Action.ACTION_DONE), doneTask.taskLine);
 	}
 }
 
@@ -159,11 +162,11 @@ class CancelTasksDecorator extends LineDecorator {
 	}
 
 	private getCancelSymbolRange(doneTask: Task): Range {
-		return super.getRange(TodoDocument.SYMBOL_CANCEL_TASK, doneTask.taskLine);
+		return super.getRange(Symbol.SYMBOL_CANCEL_TASK, doneTask.taskLine);
 	}
 
 	private getCancelActionRange(doneTask: Task): Range {
-		return super.getRange(TodoDocument.toTag(TodoDocument.ACTION_CANCELLED), doneTask.taskLine);
+		return super.getRange(toTag(Action.ACTION_CANCELLED), doneTask.taskLine);
 	}
 }
 
@@ -208,10 +211,10 @@ class TagsDecorator extends LineDecorator {
 		var todayTagRanges:Range[]= []
 		tasks.forEach((task:Task) => {
 			if (!task.isCancelled() && !task.isDone()) {
-				criticalTagRanges= criticalTagRanges.concat(task.getTagRanges(TodoDocument.TAG_CRITICAL));
-				highTagRanges= highTagRanges.concat(task.getTagRanges(TodoDocument.TAG_HIGH));
-				lowTagRanges= lowTagRanges.concat(task.getTagRanges(TodoDocument.TAG_LOW));
-				todayTagRanges= todayTagRanges.concat(task.getTagRanges(TodoDocument.TAG_TODAY));
+				criticalTagRanges= criticalTagRanges.concat(task.getTagRanges(Tag.TAG_CRITICAL));
+				highTagRanges= highTagRanges.concat(task.getTagRanges(Tag.TAG_HIGH));
+				lowTagRanges= lowTagRanges.concat(task.getTagRanges(Tag.TAG_LOW));
+				todayTagRanges= todayTagRanges.concat(task.getTagRanges(Tag.TAG_TODAY));
 			}
 		}, this);
 		return [{decorationType: TagsDecorator.DECORATOR_CRITICAL_TAG, ranges: criticalTagRanges},
