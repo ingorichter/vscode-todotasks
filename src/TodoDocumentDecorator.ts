@@ -46,7 +46,7 @@ class LineDecorator {
 		let startPositionToDecorate= new Position(start.line, symbolIndex);
 		let endPositionToDecorate= new Position(start.line, symbolIndex + text.length);
 		return new Range(startPositionToDecorate, endPositionToDecorate);
-	}    
+	}
 }
 
 class TaskDecorator {
@@ -60,32 +60,30 @@ class TaskDecorator {
 }
 
 class DoneTasksDecorator extends LineDecorator {
-	
 	private static DECORATOR_DONE_SYMBOL= window.createTextEditorDecorationType({
 		light: {
-			color: '#00723e',
-			
+			color: '#00723e'
 		},
 		dark: {
-			color: '#00723e',
+			color: '#00723e'
 		}
 	});
 
 	private static DECORATOR_DONE_ACTION= window.createTextEditorDecorationType({
 		light: {
-			color: '#ccc',
+			color: '#ccc'
 		},
 		dark: {
-			color: '#7D7D7D',
+			color: '#7D7D7D'
 		}
 	});
 
 	private static DECORATOR_TAG= window.createTextEditorDecorationType({
 		light: {
-			color: '#ccc',
+			color: '#ccc'
 		},
 		dark: {
-			color: '#7D7D7D',
+			color: '#7D7D7D'
 		}
 	});
 
@@ -118,28 +116,28 @@ class CancelTasksDecorator extends LineDecorator {
 	
 	private static DECORATOR_CANCEL_SYMBOL= window.createTextEditorDecorationType({
 		light: {
-			color: 'red',
+			color: 'red'
 		},
 		dark: {
-			color: 'red',
+			color: 'red'
 		}
 	});
 
 	private static DECORATOR_CANCEL_ACTION= window.createTextEditorDecorationType({
 		light: {
-			color: '#ccc',
+			color: '#ccc'
 		},
 		dark: {
-			color: '#7D7D7D',
+			color: '#7D7D7D'
 		}
 	});
 
 	private static DECORATOR_TAG= window.createTextEditorDecorationType({
 		light: {
-			color: '#ccc',
+			color: '#ccc'
 		},
 		dark: {
-			color: '#7D7D7D',
+			color: '#7D7D7D'
 		}
 	});
 

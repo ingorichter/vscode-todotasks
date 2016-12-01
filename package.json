@@ -92,7 +92,18 @@
                 "key": "Alt+d",
                 "when": "editorTextFocus"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "todotasks Configuration",
+            "type": "object",
+            "properties": {
+                "todotasks.cancelSymbolColor": {
+                    "type": "string",
+                    "default": "red",
+                    "description": "Color of cancel symbol for task."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
