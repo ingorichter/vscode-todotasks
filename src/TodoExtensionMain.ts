@@ -1,13 +1,13 @@
 'use strict';
 
-import { workspace, window, ExtensionContext, TextDocumentChangeEvent, languages, env, commands, TextEditor, TextEditorEdit, Position } from 'vscode';
+import { workspace, window, ExtensionContext, TextDocumentChangeEvent, languages } from 'vscode';
 import {TodoCommands} from './TodoCommands';
 import TodoCompletionItemProvider from './TodoCompletionItemProvider';
 import TodoDocumentDecorator from './TodoDocumentDecorator';
 import TodoCodeActionProvider from './TodoCodeActionProvider';
 
 export function activate(context: ExtensionContext): any {
-    
+
     context.subscriptions.push(languages.registerCompletionItemProvider('todo', new TodoCompletionItemProvider(), '@'));
     context.subscriptions.push(languages.registerCodeActionsProvider('todo', new TodoCodeActionProvider()));
 
@@ -29,8 +29,8 @@ export function activate(context: ExtensionContext): any {
     }));
 
     window.onDidChangeActiveTextEditor(editor => {
-		_decorateEditor();
-	}, null, context.subscriptions);
+        _decorateEditor();
+    }, null, context.subscriptions);
 
     _decorateEditor();
 }

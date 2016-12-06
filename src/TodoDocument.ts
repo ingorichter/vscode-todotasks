@@ -1,8 +1,8 @@
 'use strict';
 
-import {TextDocument, TextLine, Position, CompletionItem, Range} from 'vscode';
+import {TextDocument, TextLine, Position} from 'vscode';
 import Task from './Task';
-import {Symbol, Tag, Action} from './TodoConstants';
+import {Symbol} from './TodoConstants';
 
 export class TodoDocument {
 
@@ -10,10 +10,10 @@ export class TodoDocument {
     }
 
     public getProject(pos: Position): Project {
-        let line= this._textDocument.lineAt(pos.line)
+        let line= this._textDocument.lineAt(pos.line);
         let projectText= line.text.trim();
         if (projectText.endsWith(Symbol.SYMBOL_PROJECT)) {
-            return new Project(line);
+            return new Project(line.text);
         }
         return null;
     }
@@ -23,6 +23,7 @@ export class TodoDocument {
         var text= this._textDocument.getText();
         var regEx= /^\s*[☐|✘|✔]/gm;
         var match;
+
         while (match = regEx.exec(text)) {
             let line= this._textDocument.lineAt(this._textDocument.positionAt(match.index + 1).line);
             result.push(new Task(line));
@@ -45,9 +46,27 @@ export class TodoDocument {
                     || task.startsWith(Symbol.SYMBOL_CANCEL_TASK.toString())
                     || task.startsWith(Symbol.SYMBOL_DONE_TASK.toString());
     }
+
+    public getProjects(): Project[] {
+        let projects: Project[] = [];
+
+        var text= this._textDocument.getText();
+        var regEx= /^\w+:$/gm;
+        var match;
+
+        while (match = regEx.exec(text)) {
+            // let line= this._textDocument.lineAt(this._textDocument.positionAt(match.index + 1).line);
+            projects.push(new Project(match[0]));
+        }
+
+        return projects;
+    }
 }
 
 export class Project {
-    constructor(public line: TextLine) {
+    constructor(public name: string) {
+        if (name.endsWith(Symbol.SYMBOL_PROJECT)) {
+            this.name = this.name.substring(0, name.length - 1);
+        }
     }
 }

@@ -1,5 +1,5 @@
-import {TextDocument, TextLine, Position, CompletionItem, Range} from 'vscode';
-import {Symbol, Tag, Action} from './TodoConstants';
+import {TextLine, Position, Range} from 'vscode';
+import {Symbol, Action} from './TodoConstants';
 import {toTag} from './TodoUtil';
 
 export default class Task {
@@ -46,7 +46,6 @@ export default class Task {
         while (match = regEx.exec(this.taskText)) {
             if (toTag(tag).toLocaleLowerCase() === match[0].toLocaleLowerCase()) {
                 let start:Position= this.taskLine.range.start;
-                let lineText:string= this.taskLine.text;
                 let startPosition= new Position(start.line, this.taskLine.firstNonWhitespaceCharacterIndex + match.index);
                 let endPosition= new Position(start.line, this.taskLine.firstNonWhitespaceCharacterIndex + match.index + match[0].length);
                 result.push(new Range(startPosition, endPosition));
@@ -68,13 +67,12 @@ export default class Task {
     }
 
     public getTagsRanges(): Range[] {
-        var result:Range[]= [];
-        var regEx= /@[^@\s]+/g  ;
-        var match;
+        let result:Range[]= [];
+        const regEx= /@[^@\s]+/g;
+        let match;
         while (match = regEx.exec(this.taskText)) {
             if (toTag(Action.ACTION_CANCELLED) !== match[0] && toTag(Action.ACTION_DONE) !== match[0]) {
                 let start:Position= this.taskLine.range.start;
-                let lineText:string= this.taskLine.text;
                 let startPosition= new Position(start.line, this.taskLine.firstNonWhitespaceCharacterIndex + match.index);
                 let endPosition= new Position(start.line, this.taskLine.firstNonWhitespaceCharacterIndex + match.index + match[0].length);
                 result.push(new Range(startPosition, endPosition));

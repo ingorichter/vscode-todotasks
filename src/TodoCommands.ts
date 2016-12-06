@@ -1,9 +1,8 @@
 'use strict';
 
-import { commands, TextEditor, TextEditorEdit, CompletionItem, TextEdit, window} from 'vscode';
-import { TodoDocument } from './TodoDocument';
+import { commands, TextEditor, TextEditorEdit, CompletionItem} from 'vscode';
 import { TodoDocumentEditor } from './TodoDocumentEditor';
-import {Symbol, Tag, Action} from './TodoConstants';
+import {Action} from './TodoConstants';
 import {toTag} from './TodoUtil';
 
 export class TodoCommands {
@@ -61,7 +60,7 @@ export class TodoCommandsProvider {
 
     public static getCommands(filter?: string):Promise<CompletionItem[]> {
         let filtered= TodoCommandsProvider.COMMANDS.filter((commandObject: CommandObject, index: number, collection: CommandObject[]): boolean =>{
-                            return !filter || commandObject.label.indexOf(filter) !== -1
+                            return !filter || commandObject.label.indexOf(filter) !== -1;
                         });
         let result= filtered.map((commandObject: CommandObject, index: number, collection: CommandObject[]): CompletionItem =>{
                             var completionItem= new CompletionItem(commandObject.label);

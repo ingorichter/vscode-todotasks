@@ -1,8 +1,7 @@
 'use strict';
 
 import {CompletionItem} from 'vscode';
-import {TodoDocument} from './TodoDocument';
-import {Symbol, Tag, Action} from './TodoConstants';
+import {Symbol, Tag} from './TodoConstants';
 import {toTag} from './TodoUtil';
 
 export default class TagsProvider {
@@ -16,7 +15,7 @@ export default class TagsProvider {
             ? prefix.startsWith(Symbol.SYMBOL_TAG) ? prefix.substring(1) : prefix.toLocaleLowerCase()
             : "";
         let filtered = TagsProvider.TAGS.filter((tag: string, index: number, collection: String[]): boolean => {
-            return !prefix || tag.toLocaleLowerCase().indexOf(prefix) !== -1
+            return !prefix || tag.toLocaleLowerCase().indexOf(prefix) !== -1;
         });
         let result = filtered.map(this.toCompletionItem);
         return Promise.resolve(result);

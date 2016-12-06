@@ -1,10 +1,10 @@
 'use strict';
 
-import { commands, TextEditor, TextEditorEdit, Range, Position, TextLine, TextDocumentChangeEvent } from 'vscode';
+import { TextEditor, TextEditorEdit, Range, Position, TextLine } from 'vscode';
 import {TodoDocument} from './TodoDocument';
 import TodoDocumentDecorator from './TodoDocumentDecorator';
 
-import {Symbol, Tag, Action} from './TodoConstants';
+import {Symbol, Action} from './TodoConstants';
 import {toTag} from './TodoUtil';
 
 export class TodoDocumentEditor {
