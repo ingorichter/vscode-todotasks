@@ -64,6 +64,8 @@ export class TodoDocumentEditor {
     }
 
     public archiveDoneTasks() {
+        // Get all the done tasks and move it into the Archive Project.
+        // if the Archive project doesn't exist yet, create it at the end of the file
         let todoDocument= new TodoDocument(this._textEditor.document);
         let pos= this._textEditor.selection.active;
         var task= todoDocument.getTask(pos);
@@ -75,6 +77,13 @@ export class TodoDocumentEditor {
             return;
         }
 
+        let archiveProject = todoDocument.getProjects().find((project) => project.name === 'Archive');
+
+        if (archiveProject) {
+            // append done tasks
+        } else {
+            // create Archive Project and append tasks
+        }
 //        this.updateTask(task.taskLine, task.getDescription(), Symbol.SYMBOL_CANCEL_TASK, Action.ACTION_CANCELLED);
     }
 

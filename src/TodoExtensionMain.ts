@@ -7,7 +7,6 @@ import TodoDocumentDecorator from './TodoDocumentDecorator';
 import TodoCodeActionProvider from './TodoCodeActionProvider';
 
 export function activate(context: ExtensionContext): any {
-
     context.subscriptions.push(languages.registerCompletionItemProvider('todo', new TodoCompletionItemProvider(), '@'));
     context.subscriptions.push(languages.registerCodeActionsProvider('todo', new TodoCodeActionProvider()));
 

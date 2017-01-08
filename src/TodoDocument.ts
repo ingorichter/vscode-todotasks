@@ -4,6 +4,8 @@ import {TextDocument, TextLine, Position} from 'vscode';
 import Task from './Task';
 import {Symbol} from './TodoConstants';
 
+const ARCHIVE_PROJECT_SEPARATOR_LINE = '＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿';
+
 export class TodoDocument {
 
     constructor(private _textDocument: TextDocument) {
@@ -13,7 +15,7 @@ export class TodoDocument {
         let line= this._textDocument.lineAt(pos.line);
         let projectText= line.text.trim();
         if (projectText.endsWith(Symbol.SYMBOL_PROJECT)) {
-            return new Project(line.text);
+            return new Project(line.text, pos);
         }
         return null;
     }
@@ -49,22 +51,33 @@ export class TodoDocument {
 
     public getProjects(): Project[] {
         let projects: Project[] = [];
-
+        
         var text= this._textDocument.getText();
-        var regEx= /^\w+:$/gm;
+        var regEx= /^\s?\w+:$/gm;
         var match;
 
         while (match = regEx.exec(text)) {
-            // let line= this._textDocument.lineAt(this._textDocument.positionAt(match.index + 1).line);
-            projects.push(new Project(match[0]));
+            let position= this._textDocument.positionAt(match.index + 1);
+
+            let projectTaskSeparatorLine = this._textDocument.lineAt(position.line - 1);
+            if (projectTaskSeparatorLine.text.match(ARCHIVE_PROJECT_SEPARATOR_LINE)) {
+                projects.push(new Project(match[0].trim(), position, true));
+            } else {
+                projects.push(new Project(match[0].trim(), position));
+                // this.insertNewArchiveProject();
+            }
         }
 
         return projects;
     }
+
+    public insertNewArchiveProject() {
+
+    }
 }
 
 export class Project {
-    constructor(public name: string) {
+    constructor(public name: string, public position: Position, public archive: Boolean = false) {
         if (name.endsWith(Symbol.SYMBOL_PROJECT)) {
             this.name = this.name.substring(0, name.length - 1);
         }
